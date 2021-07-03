@@ -14,6 +14,7 @@ export default class UsersSchema extends BaseSchema {
       table.integer('phone_number', 13).nullable()
       table.date('birthday').nullable()
       table.string('remember_me_token').nullable()
+      table.timestamp('verified_at').nullable()
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */
