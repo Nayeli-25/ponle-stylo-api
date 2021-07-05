@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="01e633e2-acb2-4090-967f-b0f4e9d942ea" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/1625086038635_users.ts" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/1625086038635_users.ts" afterDir="false" />
-    </list>
+    <list default="true" id="01e633e2-acb2-4090-967f-b0f4e9d942ea" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,6 +40,7 @@
       <workItem from="1625098148278" duration="884000" />
       <workItem from="1625169420371" duration="1819000" />
       <workItem from="1625277714228" duration="306000" />
+      <workItem from="1625509212599" duration="32000" />
     </task>
     <servers />
   </component>
