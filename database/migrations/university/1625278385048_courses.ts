@@ -6,7 +6,13 @@ export default class Courses extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
+      table.string('file')
+      table.integer('discount')
+      table.integer('price')
+      table.dateTime('fecha_inicio')
+      table.text('description')
+      table.string('name')
+      table.string('type')
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
