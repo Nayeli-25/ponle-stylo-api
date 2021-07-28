@@ -61,12 +61,12 @@ const mailConfig: MailConfig = {
 
     smtp: {
       driver: 'smtp',
-      host: 'smtp.mailgun.org',
-      port: '587',
+      host: '',
+      port: '',
       auth: {
         type: 'login',
-        user: 'postmaster@sandboxc013189833164382930dbb2f13d9b7f3.mailgun.org',
-        pass: '64a5eb867adaf2ddc698d5983cc9f319-c485922e-8bc8ba23'
+        user: '',
+        pass: ''
       }
     },
 
