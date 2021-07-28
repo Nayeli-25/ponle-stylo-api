@@ -1,28 +1,24 @@
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| This file is dedicated for defining HTTP routes. A single file is enough
-| for majority of projects, however you can define routes in different
-| files and just make sure to import them inside this file. For example
-|
-| Define routes in following two files
-| ├── start/routes/cart.ts
-| ├── start/routes/customer.ts
-|
-| and then import them inside `start/routes.ts` as follows
-|
-| import './routes/cart'
-| import './routes/customer'
-|
-*/
-
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+
+
+
+
+
+//===================REGISTRO==========================
+Route.post('registro', 'SQL/UsersController.create')
+Route.get('foto/:id', 'SQL/UsersController.getfoto')
+Route.get('read/:id?', 'SQL/UsersController.read')
+Route.post('send', 'SQL/AuthController.sendVerificationEmail')
+Route.get('confirmEmail/:token', 'SQL/AuthController.confirmEmail')
+
+//LOGIN Y LOGOUT
+Route.post('login', 'SQL/AuthController.login')
+Route.post('logout', 'SQL/AuthController.logout')
+
+//EMAIL CONFIRMATION
+Route.get('confirmation/:token', 'SQL/AuthController.confirmEmail')
+
 
 //Carritos
 Route.get('carrito/:id?', 'MongoDB/CarritosController.index')

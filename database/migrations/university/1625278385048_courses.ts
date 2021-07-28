@@ -9,7 +9,7 @@ export default class Courses extends BaseSchema {
       table.string('file')
       table.integer('discount')
       table.integer('price')
-      table.dateTime('fecha_inicio')
+      table.dateTime('start_date')
       table.text('description')
       table.string('name')
       table.string('type')
