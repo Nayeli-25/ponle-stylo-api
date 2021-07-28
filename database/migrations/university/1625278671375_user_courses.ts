@@ -6,8 +6,8 @@ export default class UserCourses extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('user_id')
-      table.integer('course_id')
+      table.integer('user_id').unsigned().references('users.id')
+      table.integer('course_id').unsigned().references('courses.id')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

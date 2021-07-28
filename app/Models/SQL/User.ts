@@ -1,10 +1,17 @@
 import { DateTime } from 'luxon'
+import Role from 'App/Models/SQL/Role'
+import DiscountCode from './DiscountCode'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
   column,
   beforeSave,
   BaseModel,
+  HasOne,
+  hasOne,
+  manyToMany,
+  ManyToMany
 } from '@ioc:Adonis/Lucid/Orm'
+import Course from './Course'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -31,8 +38,26 @@ export default class User extends BaseModel {
   @column.date()
   public birthday: DateTime
 
+  @hasOne(() => Role)
+  public role: HasOne<typeof Role>
+
+  @hasOne(() => DiscountCode)
+  public discount: HasOne<typeof DiscountCode>
+
+  @manyToMany(() => Role)
+  public roles: ManyToMany<typeof Role>
+
+  @manyToMany(() => Course)
+  public courses: ManyToMany<typeof Course>
+
   @column()
   public rememberMeToken?: string
+
+  @column()
+  public isVerified?: boolean
+
+  @column()
+  public confirmationToken?: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

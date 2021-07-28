@@ -6,7 +6,7 @@ export default class DiscountCodes extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('user_id').references('users.id').onDelete('CASCADE')
+      table.integer('user_id').unsigned().references('users.id')
       table.integer('discount')
       table.string('discount_code')
 
