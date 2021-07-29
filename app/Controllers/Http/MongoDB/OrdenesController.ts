@@ -41,5 +41,4 @@ export default class OrdenesController {
         const dateString = (new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000)).toISOString().replace("T", " ").substr(0, 19)
         return dateString
     }
-
 }

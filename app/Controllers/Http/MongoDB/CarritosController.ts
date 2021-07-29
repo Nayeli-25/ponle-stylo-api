@@ -15,8 +15,7 @@ export default class CarritosController {
     async create ({ request }){
         const carrito = await Carrito.create({
           idUsuario: request.input('idUsuario'),
-          productos: request.input('productos'),
-          cantidad: request.input('cantidad')
+          productos: request.input('productos')
         })
         return carrito
     }
@@ -25,7 +24,6 @@ export default class CarritosController {
         const carrito = await Carrito.findById(params.id)
         carrito!.idUsuario = request.input('idUsuario')
         carrito!.productos = request.input('productos')
-        carrito!.cantidad = request.input('cantidad')
         
         await carrito!.save() 
         return carrito

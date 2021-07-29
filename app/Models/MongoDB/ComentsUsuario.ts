@@ -12,4 +12,4 @@ const ComentariosUsuarioSchema = new mongoose.Schema<ComentariosUsuario>({
   fecha: String
 })
 
-export default mongoose.model<ComentariosUsuario>('ComentariosUsuarios', ComentariosUsuarioSchema)
+export default mongoose.model<ComentariosUsuario>('Comentarios_Usuarios', ComentariosUsuarioSchema)

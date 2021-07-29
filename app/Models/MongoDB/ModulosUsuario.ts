@@ -15,4 +15,4 @@ const ModulosUsuarioSchema = new mongoose.Schema<ModulosUsuario>({
   fecha: String
 })
 
-export default mongoose.model<ModulosUsuario>('ModulosUsuarios', ModulosUsuarioSchema)
+export default mongoose.model<ModulosUsuario>('Modulos_Usuarios', ModulosUsuarioSchema)

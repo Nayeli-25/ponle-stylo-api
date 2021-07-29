@@ -17,7 +17,12 @@ export default class DetallesOrdenesController {
           idOrden: request.input('idOrden'),
           idProducto: request.input('idProducto'),
           cantidadProductos: request.input('cantidadProductos'),
-          idCodDescuento: request.input('idCodDescuento')
+          idCodDescuento: request.input('idCodDescuento'),
+          direccion: request.input('direccion'),
+          municipio: request.input('municipio'),
+          estado: request.input('estado'),
+          codigoPostal: request.input('codigoPostal'),
+          numeroTelefono: request.input('numeroTelefono')
         })
         return orden
     }
@@ -28,6 +33,11 @@ export default class DetallesOrdenesController {
         orden!.idProducto = request.input('idProducto')
         orden!.cantidadProductos = request.input('cantidadProductos')
         orden!.idCodDescuento = request.input('idCodDescuento')
+        orden!.direccion = request.input('direccion')
+        orden!.municipio = request.input('municipio')
+        orden!.estado = request.input('estado')
+        orden!.codigoPostal = request.input('codigoPostal')
+        orden!.numeroTelefono = request.input('numeroTelefono')
         
         await orden!.save() 
         return orden
@@ -37,5 +47,31 @@ export default class DetallesOrdenesController {
     async delete ({ params }) {
         const orden = await DetallesOrden.findById(params.id)
         await orden!.delete()
+    }
+
+    async numeroArticulos ({ params }) {
+            const ordenes = await DetallesOrden.aggregate([
+                { $addFields: {
+                        idOrden: { $toObjectId: "$idOrden" }
+                    }
+                }, 
+                { $lookup: {
+                    from: 'ordenes',
+                    localField: 'idOrden',
+                    foreignField: '_id',
+                    as: 'Orden'
+                    }
+                }, 
+                { $group: {
+                    _id: '$idOrden',
+                    NumeroArticulos: { $sum: '$cantidadProductos' }
+                    }
+                }
+            ])
+
+            for(let i in ordenes) {
+                if (ordenes[i]._id == params.id)
+                    return ordenes[i].NumeroArticulos
+          }
     }
 }

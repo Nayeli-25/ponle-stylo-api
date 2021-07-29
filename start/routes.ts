@@ -54,6 +54,8 @@ Route.post('detallesorden', 'MongoDB/DetallesOrdenesController.create')
 Route.put('detallesorden/:id', 'MongoDB/DetallesOrdenesController.update')
 Route.delete('detallesorden/:id', 'MongoDB/DetallesOrdenesController.delete')
 
+Route.get('numarticulos/:id', 'MongoDB/DetallesOrdenesController.numeroArticulos')
+
 //Módulos
 Route.get('modulo/:id?', 'MongoDB/ModulosController.index')
 Route.post('modulo', 'MongoDB/ModulosController.create')
@@ -83,3 +85,6 @@ Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')
 Route.post('publicacion', 'MongoDB/PublicacionesController.create')
 Route.put('publicacion/:id', 'MongoDB/PublicacionesController.update')
 Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
+
+Route.get('recientes', 'MongoDB/PublicacionesController.recientes')
+Route.get('destacados', 'MongoDB/PublicacionesController.destacados')

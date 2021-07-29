@@ -48,4 +48,14 @@ export default class PublicacionesController {
         const dateString = (new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000)).toISOString().replace("T", " ").substr(0, 19)
         return dateString
     }
+
+    async recientes () {
+        const recientes =  await Publicacion.where( { 'estatus': 'activo' } ).sort( {'fecha': -1 } ).limit(15)
+        return recientes
+    }
+
+    async destacados () {
+        const destacados =  await Publicacion.where( { 'estatus': 'activo' } ).sort( {'calificacion': -1 } ).limit(15)
+        return destacados
+    }
 }

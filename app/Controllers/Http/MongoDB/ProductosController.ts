@@ -43,6 +43,5 @@ export default class ProductosController {
         const producto = await Producto.findById(params.id)
         await producto!.delete()
     }
-
 }
     
