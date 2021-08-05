@@ -13,6 +13,7 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Course from './Course'
 
+
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -58,6 +59,9 @@ export default class User extends BaseModel {
 
   @column()
   public confirmationToken?: string
+
+  @column()
+  public resetCode?: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
