@@ -49,12 +49,10 @@ export default class UsersController {
     }
   }
 
-  async read({ params }) {
-    if (!params.id) {
-      return User.all()
-    } else {
-      return User.find(params.id)
-    }
+  async read({ request }) {
+    const data = request.body()
+    //cambio
+
   }
 
   async updatePassword({request, auth}){
