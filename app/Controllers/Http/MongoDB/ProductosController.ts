@@ -9,7 +9,7 @@ export default class ProductosController {
         if (params.id)
             return await Producto.findById(params.id)
         return await Producto.find()
-      }
+    }
         
     async create ({ request, response }){
       const Images = request.files('imagenes')
@@ -38,7 +38,7 @@ export default class ProductosController {
             cantidad: request.input('cantidad'),
         })
         return producto
-      }
+    }
     
     async update ({params, request}){
 
@@ -61,7 +61,6 @@ export default class ProductosController {
     async addImage ({ params, request, response }) {
       const Images = request.files('imagenes')
       await request.validate(new ProfilePhotoValidator(Images))
-
       if (!Images) {
         return response.abort('Not file')
       }
@@ -115,6 +114,5 @@ export default class ProductosController {
       }
       return await producto!.save() 
     }
-
 }
     
