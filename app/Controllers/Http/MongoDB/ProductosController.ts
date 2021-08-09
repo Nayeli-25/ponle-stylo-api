@@ -12,18 +12,19 @@ export default class ProductosController {
     }
         
     async create ({ request, response }){
-      const Images = request.files('imagenes')
-      await request.validate(new ProfilePhotoValidator(Images))
+        const Images = request.files('imagenes')
+        await request.validate(new ProfilePhotoValidator(Images))
+        
+        if (!Images) {
+          return response.abort('Not file')
+        }
 
-      if (!Images) {
-        return response.abort('Not file')
-      }
-
-      let files: string[] = ['0']
+        let files: string[] = ['0']
+        
         for (let image of Images) {
           const fileName = `${cuid()}.${image.extname}`
           await image.move(Application.tmpPath('products_photos'), {
-              name: fileName
+            name: fileName
           })
           files.push(fileName)
         }
@@ -61,6 +62,7 @@ export default class ProductosController {
     async addImage ({ params, request, response }) {
       const Images = request.files('imagenes')
       await request.validate(new ProfilePhotoValidator(Images))
+      
       if (!Images) {
         return response.abort('Not file')
       }
