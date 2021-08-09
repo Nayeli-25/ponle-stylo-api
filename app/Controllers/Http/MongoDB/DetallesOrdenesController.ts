@@ -28,7 +28,7 @@ export default class DetallesOrdenesController {
         return orden
     }
     
-    async update ({params, request}){
+    async update ({params, request}) {
         const orden = await DetallesOrden.findById(params.id)
         orden!.idOrden = request.input('idOrden')
         orden!.idPublicacion = request.input('idPublicacion')
