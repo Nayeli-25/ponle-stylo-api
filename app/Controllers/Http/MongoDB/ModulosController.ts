@@ -2,6 +2,8 @@
 import Modulo from 'App/Models/MongoDB/Modulo'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import Application from '@ioc:Adonis/Core/Application'
+import ProfilePhotoValidator from 'App/Validators/ProfilePhotoValidator'
+import FileValidator from 'App/Validators/FileValidator'
 
 export default class ModulosController {
 
@@ -12,10 +14,9 @@ export default class ModulosController {
     }
         
     async create ({ request, response }){
-        const Image = request.file('imagen', {
-            size: '2mb',
-            extnames: ['jpg', 'png'],
-          })
+        const Image = request.file('imagen')
+        await request.validate(new ProfilePhotoValidator(Image))
+
         if (!Image) {
           return response.abort('Not file')
         }
@@ -25,9 +26,9 @@ export default class ModulosController {
           name: imageName
         })
 
-        const Files = request.files('archivos', {
-            size: '100mb'
-        })
+        const Files = request.files('archivos')
+        await request.validate(new FileValidator(Files))
+
         if (!Files) {
           return response.abort('Not file')
         }
@@ -65,10 +66,9 @@ export default class ModulosController {
     }
 
     async updateImage ({params, request, response}){
-      const Image = request.file('imagen', {
-        size: '2mb',
-        extnames: ['jpg', 'png'],
-      })
+      const Image = request.file('imagen')
+      await request.validate(new ProfilePhotoValidator(Image))
+      
       if (!Image) {
         return response.abort('Not file')
       }
@@ -86,9 +86,9 @@ export default class ModulosController {
     }
 
     async addFile ({ params, request, response }) {
-      const Files = request.files('archivos', {
-        size: '100mb'
-      })
+      const Files = request.files('archivos')
+      await request.validate(new FileValidator(Files))
+      
       if (!Files) {
         return response.abort('Not file')
       }
@@ -109,10 +109,9 @@ export default class ModulosController {
     }
 
     async updateFile ({params, request, response}){
+      const File = request.file('archivos')
+      await request.validate(new FileValidator(File))
 
-      const File = request.file('archivos', {
-        size: '100mb'
-      })
       if (!File) {
         return response.abort('Not file')
       }
@@ -137,7 +136,6 @@ export default class ModulosController {
     }
 
     async deleteFile ({params}){
-
       const modulo = await Modulo.findById(params.id)
       const files = modulo!.archivos
 
