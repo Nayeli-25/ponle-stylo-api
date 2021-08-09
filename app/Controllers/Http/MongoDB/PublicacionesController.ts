@@ -15,6 +15,7 @@ export default class PublicacionesController {
     async create ({ request }){
         const publicacion = await Publicacion.create({
           idProducto: request.input('idProducto'),
+          precio: request.input('precio'),
           descuento: request.input('descuento'),
           calificacion: request.input('calificacion'),
           estatus: request.input('estatus'),
@@ -27,6 +28,7 @@ export default class PublicacionesController {
     async update ({params, request}){
         const publicacion = await Publicacion.findById(params.id)
         publicacion!.idProducto = request.input('idProducto')
+        publicacion!.precio = request.input('precio')
         publicacion!.descuento = request.input('descuento')
         publicacion!.calificacion = request.input('calificacion')
         publicacion!.estatus = request.input('estatus')
@@ -47,5 +49,15 @@ export default class PublicacionesController {
         const datetime = new Date()
         const dateString = (new Date(datetime.getTime() - datetime.getTimezoneOffset() * 60000)).toISOString().replace("T", " ").substr(0, 19)
         return dateString
+    }
+
+    async recientes () {
+        const recientes =  await Publicacion.where( { 'estatus': 'activo' } ).sort( {'fecha': -1 } ).limit(15)
+        return recientes
+    }
+
+    async destacados () {
+        const destacados =  await Publicacion.where( { 'estatus': 'activo' } ).sort( {'calificacion': -1 } ).limit(15)
+        return destacados
     }
 }
