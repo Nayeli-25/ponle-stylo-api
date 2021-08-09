@@ -2,43 +2,44 @@
 import Producto from 'App/Models/MongoDB/Producto'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import Application from '@ioc:Adonis/Core/Application'
+import ProfilePhotoValidator from 'App/Validators/ProfilePhotoValidator'
 
 export default class ProductosController {
     async index ({params}) {
         if (params.id)
             return await Producto.findById(params.id)
         return await Producto.find()
-      }
+    }
         
     async create ({ request, response }){
-        const Images = request.files('imagenes', {
-            size: '2mb',
-            extnames: ['jpg', 'png'],
+        const Images = request.files('imagenes')
+        await request.validate(new ProfilePhotoValidator(Images))
+        
+        if (!Images) {
+          return response.abort('Not file')
+        }
+
+        let files: string[] = ['0']
+        
+        for (let image of Images) {
+          const fileName = `${cuid()}.${image.extname}`
+          await image.move(Application.tmpPath('products_photos'), {
+            name: fileName
           })
-          if (!Images) {
-            return response.abort('Not file')
-          }
+          files.push(fileName)
+        }
+        files.shift()
 
-          let files: string[] = ['0']
-          for (let image of Images) {
-            const fileName = `${cuid()}.${image.extname}`
-            await image.move(Application.tmpPath('products_photos'), {
-              name: fileName
-            })
-            files.push(fileName)
-          }
-          files.shift()
-
-          const producto = await Producto.create({
+        const producto = await Producto.create({
             producto: request.input('producto'),
             imagenes: files,
             talla: request.input('talla'),
             color: request.input('color'),
             descripcion: request.input('descripcion'),
             cantidad: request.input('cantidad'),
-          })
+        })
         return producto
-      }
+    }
     
     async update ({params, request}){
 
@@ -59,10 +60,9 @@ export default class ProductosController {
     }
 
     async addImage ({ params, request, response }) {
-      const Images = request.files('imagenes', {
-          size: '2mb',
-          extnames: ['jpg', 'png'],
-      })
+      const Images = request.files('imagenes')
+      await request.validate(new ProfilePhotoValidator(Images))
+      
       if (!Images) {
         return response.abort('Not file')
       }
@@ -83,11 +83,9 @@ export default class ProductosController {
     }
 
     async updateImage ({params, request, response}){
+      const Image = request.file('imagenes')
+      await request.validate(new ProfilePhotoValidator(Image))
 
-      const Image = request.file('imagenes', {
-        size: '2mb',
-        extnames: ['jpg', 'png'],
-      })
       if (!Image) {
         return response.abort('Not file')
       }

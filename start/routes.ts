@@ -85,7 +85,8 @@ Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')
 Route.post('publicacion', 'MongoDB/PublicacionesController.create')
 Route.put('publicacion/:id', 'MongoDB/PublicacionesController.update')
 Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
-=======
+
+
 Route.group(() => {
   //===================================AUTH==============================================
   Route.group(() => {
