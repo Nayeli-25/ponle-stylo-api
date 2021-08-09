@@ -10,10 +10,11 @@ export default class UsersSchema extends BaseSchema {
       table.string('lastname', 200).notNullable()
       table.string('email', 255).notNullable().unique()
       table.string('password', 180).notNullable()
-      table.string('profile_photo').notNullable()
+      table.string('profile_photo').nullable()
       table.integer('phone_number', 13).nullable()
       table.date('birthday').nullable()
       table.string('remember_me_token').nullable()
+      table.integer('reset_code').nullable()
       table.string('confirmation_token').nullable()
       table.boolean('is_verified').nullable()
       /**

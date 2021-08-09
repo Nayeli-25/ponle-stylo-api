@@ -1,10 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 
-
-
-
-
 //===================REGISTRO==========================
 Route.post('registro', 'SQL/UsersController.create')
 Route.get('foto/:id', 'SQL/UsersController.getfoto')
@@ -89,3 +85,37 @@ Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')
 Route.post('publicacion', 'MongoDB/PublicacionesController.create')
 Route.put('publicacion/:id', 'MongoDB/PublicacionesController.update')
 Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
+=======
+Route.group(() => {
+  //===================================AUTH==============================================
+  Route.group(() => {
+    Route.post('register', 'SQL/UsersController.create')  ////<===== Valida informacion y crea un usuario no verificado
+    Route.post('login', 'SQL/AuthController.login')
+    Route.delete('logout', 'SQL/AuthController.logout').middleware('auth')
+  }).prefix('/auth')
+  //=====================================================================================
+
+  //=============================MODULO CONTRASEÑA OLVIDADA===============================
+  Route.group(() => {
+    Route.post('forgot-password', 'SQL/AuthController.forgotPassword')  //<===== Genera un codigo y envia correo con el mismo
+    Route.post('confirmCode', 'SQL/AuthController.confirmCode')         //<===== Confirma que el codigo sea correcto y genera un token
+  }).prefix('/password-reset')
+  //======================================================================================
+
+  //===================================USUARIOS===========================================
+  Route.group(() => {
+    Route.get('read/:id?', 'SQL/UsersController.read')
+    Route.get('foto/:id', 'SQL/UsersController.getfoto')
+
+    Route.group(() => {
+      Route.put('update', 'SQL/UsersController.update')     //<===== Actualiza la informacion de un usuario, excepto la contraseña
+      Route.delete('delete/:email?', 'SQL/UsersController.delete')    //<===== Elimina un usuario
+      Route.put('password-update', 'SQL/UsersController.updatePassword')   //<===== Actualiza la contraseña del usuario
+    }).middleware('auth')
+
+  }).prefix('/users')
+  //======================================================================================
+
+
+  Route.post('send', 'SQL/AuthController.sendVerificationEmail')
+  Route.get('confirmEmail/:token', 'SQL/AuthController.confirmEmail')
