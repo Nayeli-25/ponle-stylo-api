@@ -25,6 +25,7 @@ Route.get('carrito/:id?', 'MongoDB/CarritosController.index')
 Route.post('carrito', 'MongoDB/CarritosController.create')
 Route.put('carrito/:id', 'MongoDB/CarritosController.update')
 Route.delete('carrito/:id', 'MongoDB/CarritosController.delete')
+Route.get('productosUsuario/:email?', 'MongoDB/CarritosController.productosUsuario')
 
 //Comentarios
 Route.get('comentario/:id?', 'MongoDB/ComentariosController.index')
@@ -49,12 +50,18 @@ Route.get('detallesorden/:id?', 'MongoDB/DetallesOrdenesController.index')
 Route.post('detallesorden', 'MongoDB/DetallesOrdenesController.create')
 Route.put('detallesorden/:id', 'MongoDB/DetallesOrdenesController.update')
 Route.delete('detallesorden/:id', 'MongoDB/DetallesOrdenesController.delete')
+Route.get('numarticulos/:id', 'MongoDB/DetallesOrdenesController.numeroArticulos')
+Route.get('total/:id/:codigo?', 'MongoDB/DetallesOrdenesController.total')
 
 //Módulos
 Route.get('modulo/:id?', 'MongoDB/ModulosController.index')
 Route.post('modulo', 'MongoDB/ModulosController.create')
 Route.put('modulo/:id', 'MongoDB/ModulosController.update')
 Route.delete('modulo/:id', 'MongoDB/ModulosController.delete')
+Route.put('imgmodulo/:id', 'MongoDB/ModulosController.updateImage')
+Route.post('archivo/:id', 'MongoDB/ModulosController.addFile')
+Route.put('archivo/:id/:indice', 'MongoDB/ModulosController.updateFile')
+Route.delete('archivo/:id/:indice', 'MongoDB/ModulosController.deleteFile')
 
 //Módulos Usuarios
 Route.get('modulosusuario/:id?', 'MongoDB/ModulosUsuariosController.index')
@@ -73,6 +80,9 @@ Route.get('producto/:id?', 'MongoDB/ProductosController.index')
 Route.post('producto', 'MongoDB/ProductosController.create')
 Route.put('producto/:id', 'MongoDB/ProductosController.update')
 Route.delete('producto/:id', 'MongoDB/ProductosController.delete')
+Route.post('imgproducto/:id', 'MongoDB/ProductosController.addImage')
+Route.put('imgproducto/:id/:indice', 'MongoDB/ProductosController.updateImage')
+Route.delete('imgproducto/:id/:indice', 'MongoDB/ProductosController.deleteImage')
 
 //Publicaciones
 Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')

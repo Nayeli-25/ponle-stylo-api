@@ -6,7 +6,7 @@ export default class DiscountCode extends BaseModel {
   public id: number
 
   @column()
-  public discount: bigint
+  public discount: number
 
   @column()
   public discount_code: string

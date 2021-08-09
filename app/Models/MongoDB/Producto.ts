@@ -3,8 +3,7 @@ import mongoose from 'mongoose'
 type Producto = {
   id: string
   producto: string
-  imagen: [string]
-  precio: number
+  imagenes: [string]
   talla: [string]
   color: [string]
   descripcion: [string]
@@ -13,12 +12,11 @@ type Producto = {
 
 const ProductoSchema = new mongoose.Schema<Producto>({
   producto: String,
-  imagen: [String],
-  precio: Number,
+  imagenes: [String],
   talla: [String],
   color: [String],
   descripcion: [String],
-  cantidad: Number,
+  cantidad: Number
 })
 
 export default mongoose.model<Producto>('Productos', ProductoSchema)

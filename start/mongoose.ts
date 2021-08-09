@@ -11,8 +11,8 @@
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 
-//mongoose.connect('mongodb://localhost/PonleStylo', { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connect(Env.get('MONGOOSE_URI'), { useNewUrlParser: true, useUnifiedTopology: true })
+//mongoose.connect(Env.get('MONGOOSE_URI'), { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(Env.get('MONGOOSE_URI2'), { useNewUrlParser: true, useUnifiedTopology: true })
 
 .then(
     () => { console.log('MongoDB connected') },
