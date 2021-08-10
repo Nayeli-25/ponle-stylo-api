@@ -55,8 +55,8 @@ export default class ProductosController {
     }
     
     async delete ({ params }) {
-        const producto = await Producto.findById(params.id)
-        await producto!.delete()
+      const producto = await Producto.findById(params.id)
+      await producto!.delete()
     }
 
     async addImage ({ params, request, response }) {
@@ -92,11 +92,12 @@ export default class ProductosController {
 
       const fileName = `${cuid()}.${Image.extname}`
       await Image.move(Application.tmpPath('products_photos'), {
-          name: fileName
-        })
+        name: fileName
+      })
       
       const producto = await Producto.findById(params.id)
       const files = producto!.imagenes
+
       for(let i in files) {
           if (i == params.indice)
             files[i] = fileName
@@ -106,9 +107,9 @@ export default class ProductosController {
     }
 
     async deleteImage ({params}){
-
       const producto = await Producto.findById(params.id)
       const files = producto!.imagenes
+      
       for(let i in files) {
           if (i == params.indice)
             files.splice(parseInt(i), 1)
