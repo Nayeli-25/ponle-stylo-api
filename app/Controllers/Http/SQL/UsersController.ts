@@ -50,8 +50,8 @@ export default class UsersController {
   }
 
   async read({ request }) {
-    const data = request.body()
-    //cambio
+
+    return request.body()
 
   }
 
