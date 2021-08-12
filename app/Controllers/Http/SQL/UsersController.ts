@@ -13,7 +13,7 @@ export default class UsersController {
   async create({ request, response }) {
     const Image = request.file('profile_photo')
 
-    await request.validate(new ProfilePhotoValidator(Image))
+    if (Image) await request.validate(new ProfilePhotoValidator(Image))
 
     const fileName = Image ? `${cuid()}.${Image.extname}` : null
 
@@ -45,21 +45,38 @@ export default class UsersController {
       this.sendVerificationEmail(token)
       return response.created(data['email'])
     } catch (error) {
-      return response.abort(error)
+      return response.abort({
+        message: 'Invalid Credentials',
+      })
     }
   }
 
-  async read({ request }) {
-    const data = request.body()
-    //cambio
+  async read({ request, response }) {
+    const data = request.only('email')
+    if (data['email']) {
+      try {
+        const user = await User.findByOrFail('email', data['email'])
+        return response.ok({
+          data: user
+        })
 
+      } catch (error) {
+        return response.badRequest({
+          message: error
+        })
+      }
+    }
+    const user = await User.all()
+    return response.ok({
+      data: user
+    })
   }
 
-  async updatePassword({request, auth}){
+  async updatePassword({ request, auth }) {
     const data = request.only(['password', 'password_confirmation'])
     const user = await auth.user
 
-    if(data['password'] != data['password_confirmation']){
+    if (data['password'] != data['password_confirmation']) {
       return ['Invalid password', 400]
     }
 
@@ -72,75 +89,101 @@ export default class UsersController {
     const data = request.all()
     if (data['name']) {
       user.name = data['name']
-      await user.save()
-    } else if (data['lastname']) {
-      user.lastname = data['lastname']
-      await user.save()
-    } else if (request.file('profile_photo')) {
-      if (!user.profilePhoto) {
-        console.log('no tiene imagen')
+      if (data['lastname'] || request.file('profile_photo')) {
+        if (request.file('profile_photo')) {
+          if (!user.profilePhoto) {
+            console.log('no tiene imagen')
+            const Image = request.file('profile_photo')
+            if (!Image) {
+              return response.abort('Not file')
+            }
+            await request.validate(new ProfilePhotoValidator(Image))
+            const fileName = `${cuid()}.${Image.extname}`
+            await Image.move(Application.tmpPath('profile_photos'), {
+              name: fileName,
+            })
+            user.profilePhoto = fileName
+            if (data['lastname']) user.lastname = data['lastname']
+            await user.save()
+            return response.created({
+              message: 'Updated',
+            })
+          } else {
+            console.log('Si tiene imagen')
+            const fileName = Application.tmpPath('profile_photos/' + user.profilePhoto)
 
-        const Image = request.file('profile_photo')
-        if (!Image) {
-          return response.abort('Not file')
-        }
-        await request.validate(new ProfilePhotoValidator(Image))
-        const fileName = `${cuid()}.${Image.extname}`
-        await Image.move(Application.tmpPath('profile_photos'), {
-          name: fileName,
-        })
-        user.profilePhoto = fileName
-        user.save()
-        return response.created()
-      } else {
-        console.log('Si tiene imagen')
-        const fileName = Application.tmpPath('profile_photos/' + user.profilePhoto)
+            const Image = request.file('profile_photo')
+            if (!Image) {
+              return response.abort('Not file')
+            }
+            await request.validate(new ProfilePhotoValidator(Image))
+            fs.unlink(fileName, (err) => {
+              if (err) {
+                console.error(err)
+                return
+              }
+              //file removed
+            })
 
-        const Image = request.file('profile_photo')
-        if (!Image) {
-          return response.abort('Not file')
-        }
-        await request.validate(new ProfilePhotoValidator(Image))
-        fs.unlink(fileName, (err) => {
-          if (err) {
-            console.error(err)
-            return
+            const file = `${cuid()}.${Image.extname}`
+            await Image.move(Application.tmpPath('profile_photos'), {
+              name: file,
+            })
+            user.profilePhoto = file
+            if (data['lastname']) user.lastname = data['lastname']
+            await user.save()
+            return response.created({
+              message: 'Updated',
+            })
           }
-
-          //file removed
+        }
+        user.lastname = data['lastname']
+        await user.save()
+        return response.created({
+          message: 'Updated',
         })
-        //file removed
-        const file = `${cuid()}.${Image.extname}`
-        await Image.move(Application.tmpPath('profile_photos'), {
-          name: file,
-        })
-        user.profilePhoto = file
-        user.save()
       }
+      await user.save()
+      return response.created({
+        message: 'Updated',
+      })
     }
+    return response.abort({
+      message: 'Invalid Data',
+    })
   }
 
-  async delete({ params, auth }) {
+  async delete({ params, auth, response }) {
     if (!params.email) {
       const user = auth.user
       await user.delete()
-      return ['User Deleted', 201]
-    }
+      return response.ok({
+        message: 'User Deleted'
+      })
 
+    }
     const user = await User.findByOrFail('email', params.email)
+    console.log(user)
     try {
       await user.delete()
-      return ['User Deleted', 201]
+      return response.ok({
+        message: 'User Deleted'
+      })
     } catch (error) {
-      return ['Couldnt delete this user', 404]
+      return response.badRequest({
+        message: error
+      })
     }
-
-
   }
 
   public async getfoto({ params, response }) {
     const user = await User.find(params.id)
-    const filePath = Application.tmpPath('profile_photos/' + user?.profilePhoto)
+    var filePath
+    if (!user?.profilePhoto) {
+      filePath = Application.tmpPath('profile_photos/default/user.png')
+      return response.download(filePath)
+    }
+    filePath = Application.tmpPath('profile_photos/' + user?.profilePhoto)
     response.download(filePath)
   }
 
@@ -148,7 +191,7 @@ export default class UsersController {
     await Mail.use('ses').send((message) => {
       message
         .from('angelj.dtv@gmail.com')
-        .to('angeldtvv@gmail.com')
+        .to('nayeliesquivelluna@gmail.com')
         .subject('Verificar Email')
         .text(
           'Accede al siguiente link para verificar tu email: http://127.0.0.1:3333/confirmEmail/' +

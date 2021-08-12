@@ -1,6 +1,7 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import DetallesOrden from 'App/Models/MongoDB/Detalles_Orden'
 import DiscountCode from 'App/Models/SQL/DiscountCode'
+//const Parser = require('expr-eval').Parser
 
 export default class DetallesOrdenesController {
 
@@ -12,7 +13,7 @@ export default class DetallesOrdenesController {
         const ordenes = await DetallesOrden.find()
         return ordenes
     }
-        
+
     async create ({ request }){
         const orden = await DetallesOrden.create({
           idOrden: request.input('idOrden'),
@@ -27,7 +28,7 @@ export default class DetallesOrdenesController {
         })
         return orden
     }
-    
+
     async update ({params, request}) {
         const orden = await DetallesOrden.findById(params.id)
         orden!.idOrden = request.input('idOrden')
@@ -39,12 +40,12 @@ export default class DetallesOrdenesController {
         orden!.estado = request.input('estado')
         orden!.codigoPostal = request.input('codigoPostal')
         orden!.numeroTelefono = request.input('numeroTelefono')
-        
-        await orden!.save() 
+
+        await orden!.save()
         return orden
-    
+
     }
-    
+
     async delete ({ params }) {
         const orden = await DetallesOrden.findById(params.id)
         await orden!.delete()
@@ -55,14 +56,14 @@ export default class DetallesOrdenesController {
                 { $addFields: {
                         idOrden: { $toObjectId: "$idOrden" }
                     }
-                }, 
+                },
                 { $lookup: {
                     from: 'ordenes',
                     localField: 'idOrden',
                     foreignField: '_id',
                     as: 'Orden'
                     }
-                }, 
+                },
                 { $group: {
                     _id: '$idOrden',
                     NumeroArticulos: { $sum: '$cantidadProductos' }
@@ -77,31 +78,31 @@ export default class DetallesOrdenesController {
     }
 
     async total ({ params }) {
-        const monto = await DetallesOrden.aggregate([
+        const orden = await DetallesOrden.aggregate([
             { $addFields: {
                 idPublicacion: { $toObjectId: "$idPublicacion" }
               }
-            }, 
+            },
             { $lookup: {
                 from: 'publicaciones',
                 localField: 'idPublicacion',
                 foreignField: '_id',
                 as: 'productos'
               }
-            }, 
+            },
             { $unwind: {
                 path: '$productos',
                 preserveNullAndEmptyArrays: false
               }
-            }, 
+            },
             { $addFields: {
                 costoProducto: {$subtract: ['$productos.precio', {$multiply: [{$multiply:['$productos.descuento', 0.01]},'$productos.precio']}]}
               }
-            }, 
+            },
             { $addFields: {
                 costoProductos: {$multiply: ['$costoProducto', '$cantidadProductos']}
               }
-            }, 
+            },
             { $group: {
                 _id: '$idOrden',
                 subtotal: {
@@ -110,16 +111,21 @@ export default class DetallesOrdenesController {
               }
             }
         ])
-        let idCodigo = await DetallesOrden.where('idCodDescuento', params.codigo)
 
-        for(let i in monto) {  
-          if (monto[i]._id == params.id) {
-            if (idCodigo) {        
-              const codigo = await DiscountCode.find(params.codigo)  
-              const total = monto[i].subtotal - (monto[i].subtotal * (codigo!.discount * 0.01))
+        const detallesOrden = await DetallesOrden.where({'idOrden': params.id})
+        for(let i in orden) {  
+          if (orden[i]._id == params.id) {
+            console.log(detallesOrden)
+            if (detallesOrden[i].idCodDescuento =! '') {       
+              const codigo = await DiscountCode.find(detallesOrden[i].idCodDescuento) 
+              const total = orden[i].subtotal - (orden[i].subtotal * (codigo!.discount * 0.01))
               return total.toFixed(2)
+
+              /*const expr = Parser.parse("x - (x * (y * 0.01))").simplify({ y: codigo!.discount })
+              const total = expr.evaluate({ x: orden[i].subtotal })
+              return total.toFixed(2)*/
             }
-            return monto[i].subtotal
+            return orden[i].subtotal.toFixed(2)
           } 
         }
     }
