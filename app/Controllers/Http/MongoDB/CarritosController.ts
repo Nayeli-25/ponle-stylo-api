@@ -1,6 +1,5 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Carrito from 'App/Models/MongoDB/Carrito'
-import User from 'App/Models/SQL/User'
 
 export default class CarritosController {
 
@@ -13,17 +12,19 @@ export default class CarritosController {
         return carritos
     }
         
-    async create ({ request }){
+    async create ({ request, auth }){
+        const user = await auth.User()
         const carrito = await Carrito.create({
-          idUsuario: request.input('idUsuario'),
+          idUsuario: user!.id,
           productos: request.input('productos')
         })
         return carrito
     }
     
-    async update ({params, request}){
+    async update ({params, request, auth}){
+        const user = await auth.User()
         const carrito = await Carrito.findById(params.id)
-        carrito!.idUsuario = request.input('idUsuario')
+        carrito!.idUsuario = user!.id
         carrito!.productos = request.input('productos')
         
         await carrito!.save() 
@@ -36,10 +37,9 @@ export default class CarritosController {
         await carrito!.delete()
     }
 
-    async productosUsuario ({ auth, params }) {
-        //const user = await auth.getUser()
-        const user = await User.find(params.email)
-        const carrito = await Carrito.where({'idUsuario': user?.id})
+    async carritoUsuario ({ auth }) {
+        const user = await auth.getUser()
+        const carrito = await Carrito.where({'idUsuario': user!.id})
 
         for(let i in carrito) {
             return carrito[i].productos

@@ -1,6 +1,7 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import DetallesOrden from 'App/Models/MongoDB/Detalles_Orden'
 import DiscountCode from 'App/Models/SQL/DiscountCode'
+//const Parser = require('expr-eval').Parser
 
 export default class DetallesOrdenesController {
 
@@ -77,7 +78,7 @@ export default class DetallesOrdenesController {
     }
 
     async total ({ params }) {
-        const monto = await DetallesOrden.aggregate([
+        const orden = await DetallesOrden.aggregate([
             { $addFields: {
                 idPublicacion: { $toObjectId: "$idPublicacion" }
               }
@@ -110,17 +111,22 @@ export default class DetallesOrdenesController {
               }
             }
         ])
-        let idCodigo = await DetallesOrden.where('idCodDescuento', params.codigo)
 
-        for(let i in monto) {
-          if (monto[i]._id == params.id) {
-            if (idCodigo) {
-              const codigo = await DiscountCode.find(params.codigo)
-              const total = monto[i].subtotal - (monto[i].subtotal * (codigo!.discount * 0.01))
+        const detallesOrden = await DetallesOrden.where({'idOrden': params.id})
+        for(let i in orden) {  
+          if (orden[i]._id == params.id) {
+            console.log(detallesOrden)
+            if (detallesOrden[i].idCodDescuento =! '') {       
+              const codigo = await DiscountCode.find(detallesOrden[i].idCodDescuento) 
+              const total = orden[i].subtotal - (orden[i].subtotal * (codigo!.discount * 0.01))
               return total.toFixed(2)
+
+              /*const expr = Parser.parse("x - (x * (y * 0.01))").simplify({ y: codigo!.discount })
+              const total = expr.evaluate({ x: orden[i].subtotal })
+              return total.toFixed(2)*/
             }
-            return monto[i].subtotal
-          }
+            return orden[i].subtotal.toFixed(2)
+          } 
         }
     }
 }
