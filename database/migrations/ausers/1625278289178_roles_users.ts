@@ -5,7 +5,7 @@ export default class RolesUsers extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.integer('user_id').unsigned().references('users.id')
+      table.integer('user_id').unsigned().references('users.id').onDelete('CASCADE')
       table.integer('role_id').unsigned().references('roles.id')
 
     })

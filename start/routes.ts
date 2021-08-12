@@ -106,7 +106,7 @@ Route.group(() => {
 
   //===================================USUARIOS===========================================
   Route.group(() => {
-    Route.post('read/:id?', 'SQL/UsersController.read').middleware(['auth','role']).as('read')
+    Route.post('read/:id?', 'SQL/UsersController.read').middleware(['auth']).as('read')
     Route.get('foto/:id', 'SQL/UsersController.getfoto').as('foto')
 
     Route.group(() => {
@@ -118,6 +118,26 @@ Route.group(() => {
   }).prefix('/users').as('users')
   //======================================================================================
 
+  Route.group(() => {
+    Route.post('create','SQL/DiscountCodesController.store').as('createDiscount')
+    Route.get('index/:code?','SQL/DiscountCodesController.index').as('indexDiscount')
+    Route.put('update','SQL/DiscountCodesController.update').as('updateDiscount')
+    Route.delete('delete','SQL/DiscountCodesController.delete').as('deleteDiscount')
+  }).prefix('/discount-codes').as('discountCode')
+
+  Route.group(() => {
+    Route.post('create','SQL/SizesController.store').as('createSize')
+    Route.get('index/:name?','SQL/SizesController.index').as('indexSize')
+    Route.put('update','SQL/SizesController.update').as('updateSize')
+    Route.delete('delete','SQL/SizesController.delete').as('deleteSize')
+  }).prefix('/sizes').as('sizes')
+
+  Route.group(() => {
+    Route.post('create','SQL/CategoriesController.store').as('createCategory')
+    Route.get('index/:name?','SQL/CategoriesController.index').as('indexCategory')
+    Route.put('update','SQL/CategoriesController.update').as('updateCategory')
+    Route.delete('delete','SQL/CategoriesController.delete').as('deleteCategory')
+  }).prefix('/categories').as('categories')
 
   Route.post('send', 'SQL/AuthController.sendVerificationEmail')
   Route.get('confirmEmail/:token', 'SQL/AuthController.confirmEmail')
@@ -186,3 +206,5 @@ Route.group(() => {
   Route.put('publicacion/:id', 'MongoDB/PublicacionesController.update')
   Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
 }).prefix('api')
+
+Route.post('prueba', 'SQL/DiscountCodesController.create')
