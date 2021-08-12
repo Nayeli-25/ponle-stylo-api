@@ -2,7 +2,7 @@
 import Producto from 'App/Models/MongoDB/Producto'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import Application from '@ioc:Adonis/Core/Application'
-import ProfilePhotoValidator from 'App/Validators/ProfilePhotoValidator'
+import ProductPhotoValidator from 'App/Validators/ProductPhotoValidator'
 
 export default class ProductosController {
     async index ({params}) {
@@ -13,7 +13,7 @@ export default class ProductosController {
         
     async create ({ request, response }){
         const Images = request.files('imagenes')
-        await request.validate(new ProfilePhotoValidator(Images))
+        await request.validate(new ProductPhotoValidator(Images))
         
         if (!Images) {
           return response.abort('Not file')
@@ -61,7 +61,7 @@ export default class ProductosController {
 
     async addImage ({ params, request, response }) {
       const Images = request.files('imagenes')
-      await request.validate(new ProfilePhotoValidator(Images))
+      await request.validate(new ProductPhotoValidator(Images))
       
       if (!Images) {
         return response.abort('Not file')
@@ -84,7 +84,7 @@ export default class ProductosController {
 
     async updateImage ({params, request, response}){
       const Image = request.file('imagenes')
-      await request.validate(new ProfilePhotoValidator(Image))
+      await request.validate(new ProductPhotoValidator(Image))
 
       if (!Image) {
         return response.abort('Not file')

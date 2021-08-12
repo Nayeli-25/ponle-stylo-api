@@ -21,7 +21,7 @@ Route.get('carrito/:id?', 'MongoDB/CarritosController.index')
 Route.post('carrito', 'MongoDB/CarritosController.create')
 Route.put('carrito/:id', 'MongoDB/CarritosController.update')
 Route.delete('carrito/:id', 'MongoDB/CarritosController.delete')
-Route.get('productosUsuario/:email?', 'MongoDB/CarritosController.productosUsuario')
+Route.get('carritoUsuario', 'MongoDB/CarritosController.carritoUsuario')
 
 //Comentarios
 Route.get('comentario/:id?', 'MongoDB/ComentariosController.index')
@@ -29,25 +29,13 @@ Route.post('comentario', 'MongoDB/ComentariosController.create')
 Route.put('comentario/:id', 'MongoDB/ComentariosController.update')
 Route.delete('comentario/:id', 'MongoDB/ComentariosController.delete')
 
-//Comentarios Publicaciones
-Route.get('comentspubli/:id?', 'MongoDB/ComentsPublicacionesController.index')
-Route.post('comentspubli', 'MongoDB/ComentsPublicacionesController.create')
-Route.put('comentspubli/:id', 'MongoDB/ComentsPublicacionesController.update')
-Route.delete('comentspubli/:id', 'MongoDB/ComentsPublicacionesController.delete')
-
-//Comentarios Usuarios
-Route.get('comentsusuario/:id?', 'MongoDB/ComentsUsuariosController.index')
-Route.post('comentsusuario', 'MongoDB/ComentsUsuariosController.create')
-Route.put('comentsusuario/:id', 'MongoDB/ComentsUsuariosController.update')
-Route.delete('comentsusuario/:id', 'MongoDB/ComentsUsuariosController.delete')
-
 //Detalles Órdenes
 Route.get('detallesorden/:id?', 'MongoDB/DetallesOrdenesController.index')
 Route.post('detallesorden', 'MongoDB/DetallesOrdenesController.create')
 Route.put('detallesorden/:id', 'MongoDB/DetallesOrdenesController.update')
 Route.delete('detallesorden/:id', 'MongoDB/DetallesOrdenesController.delete')
 Route.get('numarticulos/:id', 'MongoDB/DetallesOrdenesController.numeroArticulos')
-Route.get('total/:id/:codigo?', 'MongoDB/DetallesOrdenesController.total')
+Route.get('total/:id', 'MongoDB/DetallesOrdenesController.total')
 
 //Módulos
 Route.get('modulo/:id?', 'MongoDB/ModulosController.index')
@@ -85,6 +73,8 @@ Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')
 Route.post('publicacion', 'MongoDB/PublicacionesController.create')
 Route.put('publicacion/:id', 'MongoDB/PublicacionesController.update')
 Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
+Route.get('recientes', 'MongoDB/PublicacionesController.recientes')
+Route.get('destacados', 'MongoDB/PublicacionesController.destacados')
 
 
 Route.group(() => {
@@ -117,6 +107,7 @@ Route.group(() => {
   }).prefix('/users')
   //======================================================================================
 
-
   Route.post('send', 'SQL/AuthController.sendVerificationEmail')
   Route.get('confirmEmail/:token', 'SQL/AuthController.confirmEmail')
+
+}).prefix('/api')
