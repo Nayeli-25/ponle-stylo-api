@@ -135,5 +135,6 @@ Route.group(() => {
   Route.get('destacados', 'MongoDB/PublicacionesController.destacados')
 }).prefix('api')
 
+Route.post('prueba/:id?', 'SQL/CoursesController.update')
 Route.post('prueba', 'SQL/DiscountCodesController.create')
 

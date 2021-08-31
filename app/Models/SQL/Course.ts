@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
+
 export default class Course extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -23,7 +24,7 @@ export default class Course extends BaseModel {
   @column()
   public type: string
 
-  @column.dateTime()
+  @column.date()
   public start_date: DateTime
 
   @column.dateTime({ autoCreate: true })
