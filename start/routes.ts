@@ -207,4 +207,4 @@ Route.group(() => {
   Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
 }).prefix('api')
 
-Route.post('prueba', 'SQL/DiscountCodesController.create')
+Route.post('prueba/:id?', 'SQL/CoursesController.update')
