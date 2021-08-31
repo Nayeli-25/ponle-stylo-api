@@ -191,7 +191,7 @@ export default class UsersController {
     await Mail.use('ses').send((message) => {
       message
         .from('angelj.dtv@gmail.com')
-        .to('angeldtvv@gmail.com')
+        .to('nayeliesquivelluna@gmail.com')
         .subject('Verificar Email')
         .text(
           'Accede al siguiente link para verificar tu email: http://127.0.0.1:3333/confirmEmail/' +

@@ -13,16 +13,18 @@ export default class OrdenesController {
     }
         
     async create ({ request }){
+        //const user = await auth.User()
         const orden = await Orden.create({
-          idUsuario: request.input('idUsuario'),
+          idUsuario: '0',//user!.id,
           fecha: (await this.fecha()).toString()
         })
         return orden
     }
     
     async update ({params, request}){
+        //const user = await auth.User()
         const orden = await Orden.findById(params.id)
-        orden!.idUsuario = request.input('idUsuario')
+        orden!.idUsuario = '0'//user!.id
         orden!.fecha = (await this.fecha()).toString()
         
         await orden!.save() 
