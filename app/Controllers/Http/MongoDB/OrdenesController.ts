@@ -12,19 +12,19 @@ export default class OrdenesController {
         return ordenes
     }
         
-    async create ({ request }){
-        //const user = await auth.User()
+    async create ({auth}){
+        const user = await auth.user
         const orden = await Orden.create({
-          idUsuario: '0',//user!.id,
+          idUsuario: user.id,
           fecha: (await this.fecha()).toString()
         })
         return orden
     }
     
-    async update ({params, request}){
-        //const user = await auth.User()
+    async update ({params, auth}){
+        const user = await auth.user
         const orden = await Orden.findById(params.id)
-        orden!.idUsuario = '0'//user!.id
+        orden!.idUsuario = user.id
         orden!.fecha = (await this.fecha()).toString()
         
         await orden!.save() 
