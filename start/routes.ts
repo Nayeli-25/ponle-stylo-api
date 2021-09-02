@@ -137,5 +137,6 @@ Route.group(() => {
   }).middleware('auth')
 }).prefix('api')
 
+Route.post('prueba/:id?', 'SQL/CoursesController.update')
 Route.post('prueba', 'SQL/DiscountCodesController.create')
 
