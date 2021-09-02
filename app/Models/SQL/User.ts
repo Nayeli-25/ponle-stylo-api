@@ -39,9 +39,6 @@ export default class User extends BaseModel {
   @column.date()
   public birthday: DateTime
 
-  @hasOne(() => Role)
-  public role: HasOne<typeof Role>
-
   @hasOne(() => DiscountCode)
   public discount: HasOne<typeof DiscountCode>
 
