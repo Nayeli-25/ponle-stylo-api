@@ -38,7 +38,7 @@ export default class CarritosController {
     }
 
     async carritoUsuario ({ auth }) {
-        const user = await auth.getUser()
+        const user = await auth.user
         const carrito = await Carrito.where({'idUsuario': user!.id})
 
         for(let i in carrito) {

@@ -18,7 +18,6 @@ export default class ModulosUsuariosController {
           idUsuario: request.input('idUsuario'),
           estatus: request.input('estatus'),
           fecha: (await this.fecha()).toString()
-
         })
         return modulo
     }
