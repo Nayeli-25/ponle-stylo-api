@@ -13,18 +13,18 @@ export default class CarritosController {
     }
         
     async create ({ request, auth }){
-        const user = await auth.User()
+        const user = await auth.user
         const carrito = await Carrito.create({
-          idUsuario: user!.id,
+          idUsuario: user.id,
           productos: request.input('productos')
         })
         return carrito
     }
     
     async update ({params, request, auth}){
-        const user = await auth.User()
+        const user = await auth.user
         const carrito = await Carrito.findById(params.id)
-        carrito!.idUsuario = user!.id
+        carrito!.idUsuario = user.id
         carrito!.productos = request.input('productos')
         
         await carrito!.save() 
@@ -38,7 +38,7 @@ export default class CarritosController {
     }
 
     async carritoUsuario ({ auth }) {
-        const user = await auth.getUser()
+        const user = await auth.user
         const carrito = await Carrito.where({'idUsuario': user!.id})
 
         for(let i in carrito) {

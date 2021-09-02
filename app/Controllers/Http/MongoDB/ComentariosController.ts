@@ -15,11 +15,11 @@ export default class ComentariosController {
     }
         
     async create ({ request, auth }){
-        //const user = await auth.User()
+        const user = await auth.user
         const comentario = await Comentario.create({
           estatus: request.input('estatus'),
           comentario: request.input('comentario'),
-          idUsuario: '0',//user!.id,
+          idUsuario: user.id,
           idPublicacion: request.input('idPublicacion'),
           fecha: (await this.fecha()).toString()
         })
@@ -27,11 +27,11 @@ export default class ComentariosController {
     }
     
     async update ({params, request, auth}){
-        //const user = await auth.getUser()
+        const user = await auth.user
         const comentario = await Comentario.findById(params.id)
         comentario!.estatus = request.input('estatus')
         comentario!.comentario = request.input('comentario')
-        comentario!.idUsuario = '0'//user!.id
+        comentario!.idUsuario = user.id
         comentario!.idPublicacion = request.input('idPublicacion')
         comentario!.fecha = (await this.fecha()).toString()
         
