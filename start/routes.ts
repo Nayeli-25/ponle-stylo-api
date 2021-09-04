@@ -93,6 +93,8 @@ Route.group(() => {
     Route.delete('detallesorden/:id', 'MongoDB/DetallesOrdenesController.delete')
     Route.get('numarticulos/:id', 'MongoDB/DetallesOrdenesController.numeroArticulos')
     Route.get('total/:id', 'MongoDB/DetallesOrdenesController.total')
+    Route.get('ordenespendientes', 'MongoDB/DetallesOrdenesController.ordenesSinEntregar')
+  
     //Módulos
     Route.get('modulo/:id?', 'MongoDB/ModulosController.index')
     Route.post('modulo', 'MongoDB/ModulosController.create')

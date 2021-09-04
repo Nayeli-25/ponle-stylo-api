@@ -117,5 +117,9 @@ export default class ProductosController {
       }
       return await producto!.save() 
     }
+<<<<<<< HEAD
 }
     
+=======
+}
+>>>>>>> ea6fcd2ad2d07f7a0b986bb5da7b558561b67ba4

@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 type DetallesOrden = {
   id: string
   idOrden: string
+  estatus: string
   idPublicacion: string
   cantidadProductos: number
   idCodDescuento: string
@@ -15,6 +16,7 @@ type DetallesOrden = {
 
 const DetallesOrdenSchema = new mongoose.Schema<DetallesOrden>({
   idOrden: String,
+  estatus: String,
   idPublicacion: String,
   cantidadProductos: Number,
   idCodDescuento: String,
