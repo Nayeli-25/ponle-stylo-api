@@ -74,7 +74,7 @@ Route.group(() => {
   //EMAIL CONFIRMATION
   Route.get('confirmation/:token', 'SQL/AuthController.confirmEmail')
 
-  Route.group(() => {
+  //Route.group(() => {
     //Carritos
     Route.get('carrito/:id?', 'MongoDB/CarritosController.index')
     Route.post('carrito', 'MongoDB/CarritosController.create')
@@ -95,6 +95,7 @@ Route.group(() => {
     Route.delete('detallesorden/:id', 'MongoDB/DetallesOrdenesController.delete')
     Route.get('numarticulos/:id', 'MongoDB/DetallesOrdenesController.numeroArticulos')
     Route.get('total/:id', 'MongoDB/DetallesOrdenesController.total')
+    Route.get('ordenespendientes', 'MongoDB/DetallesOrdenesController.ordenesSinEntregar')
   
     //Módulos
     Route.get('modulo/:id?', 'MongoDB/ModulosController.index')
@@ -135,7 +136,7 @@ Route.group(() => {
     Route.get('recientes', 'MongoDB/PublicacionesController.recientes')
     Route.get('destacados', 'MongoDB/PublicacionesController.destacados')
   
-  }).middleware('auth')
+  //}).middleware('auth')
 }).prefix('api')
 
 Route.post('prueba', 'SQL/DiscountCodesController.create')

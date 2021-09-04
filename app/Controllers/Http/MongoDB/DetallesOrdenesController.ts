@@ -17,6 +17,7 @@ export default class DetallesOrdenesController {
     async create ({ request }){
         const orden = await DetallesOrden.create({
           idOrden: request.input('idOrden'),
+          estatus: request.input('estatus'),
           idPublicacion: request.input('idPublicacion'),
           cantidadProductos: request.input('cantidadProductos'),
           idCodDescuento: request.input('idCodDescuento'),
@@ -32,6 +33,7 @@ export default class DetallesOrdenesController {
     async update ({params, request}) {
         const orden = await DetallesOrden.findById(params.id)
         orden!.idOrden = request.input('idOrden')
+        orden!.estatus = request.input('estatus')
         orden!.idPublicacion = request.input('idPublicacion')
         orden!.cantidadProductos = request.input('cantidadProductos')
         orden!.idCodDescuento = request.input('idCodDescuento')
@@ -77,7 +79,7 @@ export default class DetallesOrdenesController {
           }
     }
 
-    async total ({ params }) {
+    async total ({ params, response }) {
         const orden = await DetallesOrden.aggregate([
             { $addFields: {
                 idPublicacion: { $toObjectId: "$idPublicacion" }
@@ -115,18 +117,33 @@ export default class DetallesOrdenesController {
         const detallesOrden = await DetallesOrden.where({'idOrden': params.id})
         for(let i in orden) {  
           if (orden[i]._id == params.id) {
-            console.log(detallesOrden)
-            if (detallesOrden[i].idCodDescuento) {       
-              const codigo = await DiscountCode.find(detallesOrden[i].idCodDescuento) 
-              const total = orden[i].subtotal - (orden[i].subtotal * (codigo!.discount * 0.01))
-              return total.toFixed(2)
-
-              /*const expr = Parser.parse("x - (x * (y * 0.01))").simplify({ y: codigo!.discount })
-              const total = expr.evaluate({ x: orden[i].subtotal })
-              return total.toFixed(2)*/
+            let total = orden[i].subtotal
+            //////////////////// Total con IVA ///////////////////////
+            //let total = orden[i].subtotal + (orden[i].subtotal*0.16)
+            //////////////////////////////////////////////////////////
+            
+            if (detallesOrden[0].idCodDescuento) {       
+              const codigo = await DiscountCode.find(detallesOrden[0].idCodDescuento) 
+              if (!!codigo == true)
+                total = total - (total * (codigo!.discount * 0.01))
+              else { 
+                return response.abort({
+                message: 'Código inválido'
+                }) 
+              }
             }
-            return orden[i].subtotal.toFixed(2)
+            /////////////////////////// Total + costo de envío ///////////////////////////////
+            /*if (total < 300) {
+              const region = await Region.where({'codigoPostal': detallesOrden[0].codigoPostal})
+              total = total + region[0].costoEnvio
+            }*/
+            ///////////////////////////////////////////////////////////////////////////////////
+            return total.toFixed(2)
           } 
         }
     }
+
+    async ordenesSinEntregar() {
+        return await DetallesOrden.where({'estatus': { $in : ['En preparación','En camino']}}).sort('estatus')
+  }
 }

@@ -1,7 +1,7 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class FileValidator {
+export default class ProductValidator {
   constructor (protected ctx: HttpContextContract) {
   }
 
@@ -24,12 +24,14 @@ export default class FileValidator {
 	 *     ])
 	 *    ```
 	 */
-  public schema = schema.create({
-	module_file: schema.file({
-		size: '300mb',
-		extnames: ['pdf', 'epub', 'azw', 'ibook', 'docx', 'doc', 'txt', 'jpg', 'png', 'avi', 'mp4', 'mpeg', 'mwv', 'mp3', 'wav', 'wma', 'zip', 'rar']
+	public schema = schema.create({
+		imagenes: schema.array().members(
+			schema.file({
+				size: '5mb',
+			extnames: ['jpg', 'png']
+			})
+		  )
 	  })
-  })
 
 	/**
 	 * Custom messages for validation failures. You can make use of dot notation `(.)`

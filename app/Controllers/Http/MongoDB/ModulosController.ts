@@ -2,8 +2,7 @@
 import Modulo from 'App/Models/MongoDB/Modulo'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import Application from '@ioc:Adonis/Core/Application'
-import ProfilePhotoValidator from 'App/Validators/ProfilePhotoValidator'
-import FileValidator from 'App/Validators/FileValidator'
+import ModuleValidator from 'App/Validators/ModuleValidator'
 
 export default class ModulosController {
 
@@ -15,7 +14,7 @@ export default class ModulosController {
         
     async create ({ request, response }){
         const Image = request.file('imagen')
-        await request.validate(new ProfilePhotoValidator(Image))
+        await request.validate(new ModuleValidator(Image))
 
         if (!Image) {
           return response.abort('Not file')
@@ -27,13 +26,14 @@ export default class ModulosController {
         })
 
         const Files = request.files('archivos')
-        await request.validate(new FileValidator(Files))
+        await request.validate(new ModuleValidator(Files))
 
         if (!Files) {
           return response.abort('Not file')
         }
 
         let files: [{nombreAlmacenado: string, nombreUsuario: string, tipoArchivo: string, path: string, tamaño: string }] = [{nombreAlmacenado: '0', nombreUsuario:'0', tipoArchivo:'0', path:'0', tamaño:'0'}]
+        
         for (let file of Files) {
           const fileName = `${cuid()}.${file.extname}`
           await file.move(Application.tmpPath('modules_files'), {
@@ -67,7 +67,7 @@ export default class ModulosController {
 
     async updateImage ({params, request, response}){
       const Image = request.file('imagen')
-      await request.validate(new ProfilePhotoValidator(Image))
+      await request.validate(new ModuleValidator(Image))
       
       if (!Image) {
         return response.abort('Not file')
@@ -87,7 +87,7 @@ export default class ModulosController {
 
     async addFile ({ params, request, response }) {
       const Files = request.files('archivos')
-      await request.validate(new FileValidator(Files))
+      await request.validate(new ModuleValidator(Files))
       
       if (!Files) {
         return response.abort('Not file')
@@ -110,14 +110,14 @@ export default class ModulosController {
 
     async updateFile ({params, request, response}){
       const File = request.file('archivos')
-      await request.validate(new FileValidator(File))
+      await request.validate(new ModuleValidator(File))
 
       if (!File) {
         return response.abort('Not file')
       }
 
       const fileName = `${cuid()}.${File.extname}`
-      await File.move(Application.tmpPath('modules_photos'), {
+      await File.move(Application.tmpPath('modules_files'), {
           name: fileName
       })
       
@@ -147,3 +147,4 @@ export default class ModulosController {
       return await modulo!.save() 
     }
 }
+
