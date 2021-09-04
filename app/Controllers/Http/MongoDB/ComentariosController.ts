@@ -14,30 +14,47 @@ export default class ComentariosController {
         return comentarios
     }
         
-    async create ({ request, auth }){
+    async create ({ request, auth, response }){
         const user = await auth.user
-        const comentario = await Comentario.create({
-          estatus: request.input('estatus'),
-          comentario: request.input('comentario'),
-          idUsuario: user.id,
-          idPublicacion: request.input('idPublicacion'),
-          fecha: (await this.fecha()).toString()
-        })
-        return comentario
+        await Publicacion.aggregate([
+            { $addFields: {_id: { $toString: '$_id'} } }
+        ])
+        const publicacion = await Publicacion.findById(request.input('idPublicacion'))
+        if (!!publicacion  == true) {
+            const comentario = await Comentario.create({
+                estatus: request.input('estatus'),
+                comentario: request.input('comentario'),
+                idUsuario: user.id,
+                idPublicacion: request.input('idPublicacion'),
+                fecha: (await this.fecha()).toString()
+            })
+            return comentario
+        }
+        return response.abort({
+            message: 'Publicación inválida'
+        }) 
     }
     
-    async update ({params, request, auth}){
+    async update ({params, request, auth, response}){
         const user = await auth.user
-        const comentario = await Comentario.findById(params.id)
-        comentario!.estatus = request.input('estatus')
-        comentario!.comentario = request.input('comentario')
-        comentario!.idUsuario = user.id
-        comentario!.idPublicacion = request.input('idPublicacion')
-        comentario!.fecha = (await this.fecha()).toString()
+        await Publicacion.aggregate([
+            { $addFields: {_id: { $toString: '$_id'} } }
+        ])
+        const publicacion = await Publicacion.findById(request.input('idPublicacion'))
+        if (!!publicacion  == true) {
+            const comentario = await Comentario.findById(params.id)
+            comentario!.estatus = request.input('estatus')
+            comentario!.comentario = request.input('comentario')
+            comentario!.idUsuario = user.id
+            comentario!.idPublicacion = request.input('idPublicacion')
+            comentario!.fecha = (await this.fecha()).toString()
         
-        await comentario!.save() 
-        return comentario
-    
+            await comentario!.save() 
+            return comentario
+        }
+        return response.abort({
+            message: 'Publicación inválida'
+        }) 
     }
     
     async delete ({ params }) {

@@ -1,5 +1,6 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Publicacion from 'App/Models/MongoDB/Publicacion'
+import Producto from 'App/Models/MongoDB/Producto'
 
 export default class PublicacionesController {
 
@@ -12,31 +13,47 @@ export default class PublicacionesController {
         return publicaciones
     }
         
-    async create ({ request }){
-        const publicacion = await Publicacion.create({
-          idProducto: request.input('idProducto'),
-          precio: request.input('precio'),
-          descuento: request.input('descuento'),
-          calificacion: request.input('calificacion'),
-          estatus: request.input('estatus'),
-          fecha: (await this.fecha()).toString()
-
-        })
-        return publicacion
+    async create ({ request, response }){
+        await Producto.aggregate([
+            { $addFields: {_id: { $toString: '$_id'} } }
+        ])
+        const producto = await Producto.findById(request.input('idProducto'))
+        if (!!producto  == true) {
+            const publicacion = await Publicacion.create({
+                idProducto: request.input('idProducto'),
+                precio: request.input('precio'),
+                descuento: request.input('descuento'),
+                calificacion: request.input('calificacion'),
+                estatus: request.input('estatus'),
+                fecha: (await this.fecha()).toString()
+            })
+            return publicacion
+        }
+        return response.abort({
+            message: 'Producto inválido'
+        }) 
     }
     
-    async update ({params, request}){
-        const publicacion = await Publicacion.findById(params.id)
-        publicacion!.idProducto = request.input('idProducto')
-        publicacion!.precio = request.input('precio')
-        publicacion!.descuento = request.input('descuento')
-        publicacion!.calificacion = request.input('calificacion')
-        publicacion!.estatus = request.input('estatus')
-        publicacion!.fecha = (await this.fecha()).toString()
+    async update ({params, request, response}){
+        await Producto.aggregate([
+            { $addFields: {_id: { $toString: '$_id'} } }
+        ])
+        const producto = await Producto.findById(request.input('idProducto'))
+        if (!!producto  == true) {
+            const publicacion = await Publicacion.findById(params.id)
+            publicacion!.idProducto = request.input('idProducto')
+            publicacion!.precio = request.input('precio')
+            publicacion!.descuento = request.input('descuento')
+            publicacion!.calificacion = request.input('calificacion')
+            publicacion!.estatus = request.input('estatus')
+            publicacion!.fecha = (await this.fecha()).toString()
         
-        await publicacion!.save() 
-        return publicacion
-    
+            await publicacion!.save() 
+            return publicacion
+        }
+        return response.abort({
+            message: 'Producto inválido'
+        }) 
     }
     
     async delete ({ params }) {
