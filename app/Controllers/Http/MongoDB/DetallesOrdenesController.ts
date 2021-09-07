@@ -1,6 +1,8 @@
 // import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import DetallesOrden from 'App/Models/MongoDB/Detalles_Orden'
 import DiscountCode from 'App/Models/SQL/DiscountCode'
+import Orden from 'App/Models/MongoDB/Orden'
+
 //const Parser = require('expr-eval').Parser
 
 export default class DetallesOrdenesController {
@@ -17,15 +19,8 @@ export default class DetallesOrdenesController {
     async create ({ request }){
         const orden = await DetallesOrden.create({
           idOrden: request.input('idOrden'),
-          estatus: request.input('estatus'),
           idPublicacion: request.input('idPublicacion'),
           cantidadProductos: request.input('cantidadProductos'),
-          idCodDescuento: request.input('idCodDescuento'),
-          direccion: request.input('direccion'),
-          municipio: request.input('municipio'),
-          estado: request.input('estado'),
-          codigoPostal: request.input('codigoPostal'),
-          numeroTelefono: request.input('numeroTelefono')
         })
         return orden
     }
@@ -33,15 +28,8 @@ export default class DetallesOrdenesController {
     async update ({params, request}) {
         const orden = await DetallesOrden.findById(params.id)
         orden!.idOrden = request.input('idOrden')
-        orden!.estatus = request.input('estatus')
         orden!.idPublicacion = request.input('idPublicacion')
         orden!.cantidadProductos = request.input('cantidadProductos')
-        orden!.idCodDescuento = request.input('idCodDescuento')
-        orden!.direccion = request.input('direccion')
-        orden!.municipio = request.input('municipio')
-        orden!.estado = request.input('estado')
-        orden!.codigoPostal = request.input('codigoPostal')
-        orden!.numeroTelefono = request.input('numeroTelefono')
 
         await orden!.save()
         return orden
@@ -80,7 +68,7 @@ export default class DetallesOrdenesController {
     }
 
     async total ({ params, response }) {
-        const orden = await DetallesOrden.aggregate([
+        const detallesOrden = await DetallesOrden.aggregate([
             { $addFields: {
                 idPublicacion: { $toObjectId: "$idPublicacion" }
               }
@@ -98,11 +86,11 @@ export default class DetallesOrdenesController {
               }
             },
             { $addFields: {
-                costoProducto: {$subtract: ['$productos.precio', {$multiply: [{$multiply:['$productos.descuento', 0.01]},'$productos.precio']}]}
+                costoProductoConDescuento: {$subtract: ['$productos.precio', {$multiply: [{$multiply:['$productos.descuento', 0.01]},'$productos.precio']}]}
               }
             },
             { $addFields: {
-                costoProductos: {$multiply: ['$costoProducto', '$cantidadProductos']}
+                costoProductos: {$multiply: ['$costoProductoConDescuento', '$cantidadProductos']}
               }
             },
             { $group: {
@@ -114,16 +102,16 @@ export default class DetallesOrdenesController {
             }
         ])
 
-        const detallesOrden = await DetallesOrden.where({'idOrden': params.id})
-        for(let i in orden) {  
-          if (orden[i]._id == params.id) {
-            let total = orden[i].subtotal
+        const orden = await Orden.where({'idOrden': params.id})
+        for(let i in detallesOrden) { 
+          if (detallesOrden[i]._id == params.id) {
+            let total = detallesOrden[i].subtotal
             //////////////////// Total con IVA ///////////////////////
-            //let total = orden[i].subtotal + (orden[i].subtotal*0.16)
+            //let total = detallesOrden[i].subtotal + (detallesOrden[i].subtotal*0.16)
             //////////////////////////////////////////////////////////
             
-            if (detallesOrden[0].idCodDescuento) {       
-              const codigo = await DiscountCode.find(detallesOrden[0].idCodDescuento) 
+            if (orden[0].idCodDescuento) {       
+              const codigo = await DiscountCode.find(orden[0].idCodDescuento) 
               if (!!codigo == true)
                 total = total - (total * (codigo!.discount * 0.01))
               else { 
@@ -134,7 +122,7 @@ export default class DetallesOrdenesController {
             }
             /////////////////////////// Total + costo de envío ///////////////////////////////
             /*if (total < 300) {
-              const region = await Region.where({'codigoPostal': detallesOrden[0].codigoPostal})
+              const region = await Region.where({'codigoPostal': orden[0].codigoPostal})
               total = total + region[0].costoEnvio
             }*/
             ///////////////////////////////////////////////////////////////////////////////////
