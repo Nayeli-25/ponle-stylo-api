@@ -24,6 +24,20 @@ export default class ModuleValidator {
 	 *     ])
 	 *    ```
 	 */
+<<<<<<< HEAD:app/Validators/ModuleValidator.ts
+  public schema = schema.create({
+	imagen: schema.file({
+		size: '5mb',
+		extnames: ['jpg', 'png']
+	}),
+	archivos: schema.array().members(
+		schema.file({
+			size: '300mb',
+			extnames: ['pdf', 'epub', 'azw', 'ibook', 'docx', 'doc', 'txt', 'jpg', 'png', 'avi', 'mp4', 'mpeg', 'mwv', 'mp3', 'wav', 'wma', 'zip', 'rar']
+		})
+	)
+  })
+=======
 	public schema = schema.create({
 		imagen: schema.file({
 			size: '5mb',
@@ -36,6 +50,7 @@ export default class ModuleValidator {
 			})
 		)
 	  })
+>>>>>>> ea6fcd2ad2d07f7a0b986bb5da7b558561b67ba4:app/Validators/FileValidator.ts
 
 	/**
 	 * Custom messages for validation failures. You can make use of dot notation `(.)`

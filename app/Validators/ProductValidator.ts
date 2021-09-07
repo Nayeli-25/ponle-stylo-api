@@ -24,6 +24,16 @@ export default class ProductValidator {
 	 *     ])
 	 *    ```
 	 */
+<<<<<<< HEAD:app/Validators/ProductValidator.ts
+  public schema = schema.create({
+	imagenes: schema.array().members(
+		schema.file({
+			size: '5mb',
+		extnames: ['jpg', 'png']
+		})
+	  )
+  })
+=======
 	public schema = schema.create({
 		imagenes: schema.array().members(
 			schema.file({
@@ -32,6 +42,7 @@ export default class ProductValidator {
 			})
 		  )
 	  })
+>>>>>>> ea6fcd2ad2d07f7a0b986bb5da7b558561b67ba4:app/Validators/ProductPhotoValidator.ts
 
 	/**
 	 * Custom messages for validation failures. You can make use of dot notation `(.)`

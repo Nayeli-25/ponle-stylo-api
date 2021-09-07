@@ -74,20 +74,18 @@ Route.group(() => {
   //EMAIL CONFIRMATION
   Route.get('confirmation/:token', 'SQL/AuthController.confirmEmail')
 
-  //Route.group(() => {
+  Route.group(() => {
     //Carritos
     Route.get('carrito/:id?', 'MongoDB/CarritosController.index')
     Route.post('carrito', 'MongoDB/CarritosController.create')
     Route.put('carrito/:id', 'MongoDB/CarritosController.update')
     Route.delete('carrito/:id', 'MongoDB/CarritosController.delete')
     Route.get('carritoUsuario', 'MongoDB/CarritosController.carritoUsuario')
-  
     //Comentarios
     Route.get('comentario/:id?', 'MongoDB/ComentariosController.index')
     Route.post('comentario', 'MongoDB/ComentariosController.create')
     Route.put('comentario/:id', 'MongoDB/ComentariosController.update')
     Route.delete('comentario/:id', 'MongoDB/ComentariosController.delete')
-  
     //Detalles Órdenes
     Route.get('detallesorden/:id?', 'MongoDB/DetallesOrdenesController.index')
     Route.post('detallesorden', 'MongoDB/DetallesOrdenesController.create')
@@ -106,19 +104,16 @@ Route.group(() => {
     Route.post('archivo/:id', 'MongoDB/ModulosController.addFile')
     Route.put('archivo/:id/:indice', 'MongoDB/ModulosController.updateFile')
     Route.delete('archivo/:id/:indice', 'MongoDB/ModulosController.deleteFile')
-  
     //Módulos Usuarios
     Route.get('modulosusuario/:id?', 'MongoDB/ModulosUsuariosController.index')
     Route.post('modulosusuario/', 'MongoDB/ModulosUsuariosController.create')
     Route.put('modulosusuario/:id', 'MongoDB/ModulosUsuariosController.update')
     Route.delete('modulosusuario/:id', 'MongoDB/ModulosUsuariosController.delete')
-  
     //Órdenes
     Route.get('orden/:id?', 'MongoDB/OrdenesController.index')
     Route.post('orden/', 'MongoDB/OrdenesController.create')
     Route.put('orden/:id', 'MongoDB/OrdenesController.update')
     Route.delete('orden/:id', 'MongoDB/OrdenesController.delete')
-  
     //Productos
     Route.get('producto/:id?', 'MongoDB/ProductosController.index')
     Route.post('producto', 'MongoDB/ProductosController.create')
@@ -127,7 +122,6 @@ Route.group(() => {
     Route.post('imgproducto/:id', 'MongoDB/ProductosController.addImage')
     Route.put('imgproducto/:id/:indice', 'MongoDB/ProductosController.updateImage')
     Route.delete('imgproducto/:id/:indice', 'MongoDB/ProductosController.deleteImage')
-  
     //Publicaciones
     Route.get('publicacion/:id?', 'MongoDB/PublicacionesController.index')
     Route.post('publicacion', 'MongoDB/PublicacionesController.create')
@@ -135,8 +129,7 @@ Route.group(() => {
     Route.delete('publicacion/:id', 'MongoDB/PublicacionesController.delete')
     Route.get('recientes', 'MongoDB/PublicacionesController.recientes')
     Route.get('destacados', 'MongoDB/PublicacionesController.destacados')
-  
-  //}).middleware('auth')
+  }).middleware('auth')
 }).prefix('api')
 
 Route.post('prueba/:id?', 'SQL/CoursesController.update')
